@@ -1,19 +1,10 @@
-# @@name-of-spec
+# Cloud Browser TF
 
-@@one-sentence-description
+Repository for the Cloud Browser TF of the Media and Entertainment IG
 
-@@long-description
-
-## Authors
-
-@@info-about-group-and-editors
-
-## @@details
-
-@@whatever
-
-## Credits
-
-Copyright © @@year [World Wide Web Consortium](http://www.w3.org/)
-
-This project is licensed [under the terms of the @@chosen-license](LICENSE.md).
+See also the following resources:
+* [TF Wiki](https://www.w3.org/2011/webtv/wiki/Main_Page/Cloud_Browser_TF)
+* [Cloud Browser Architecture Note](https://www.w3.org/TR/cloud-browser-arch/)
+* [IG Page](https://www.w3.org/2011/webtv/)
+* [IG Charter](https://www.w3.org/2017/03/webtv-charter.html)
+* [IG Wiki](https://www.w3.org/2011/webtv/wiki/Main_Page) 
