@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Cloud Browser Architecture</title>
+    <title>Cloud Browser Group Note</title>
     <meta charset='utf-8'>
     <script src='https://www.w3.org/Tools/respec/respec-w3c-common' async class='remove'></script>
     <script class='remove'>
@@ -32,122 +32,449 @@
   <body>
     <section id='abstract'>
       <p>
-          A Cloud Browser is a browser running and executing on a server. This document describes the concepts and architecture for the Cloud Browser. The main purpose is to provide the building blocks for a Cloud Browser solution.
+          A Cloud Browser is a browser running and executing on a server. This document describes the concepts and architecture for the Cloud Browser using use cases and requirements.
       </p>
     </section>
-    
     <section id='sotd'>
       <p>
-          This is an Interest Group Note that the Cloud Browser Task Force of the Web and TV Interest Group is discussing and exploring. It has no official standing of any kind and does not represent the support or consensus of any standard organisations or contributors. This is a subset of the W3C Public Web &amp; TV Interest Group - Cloud Browser Task Force. As the Cloud Browser TF progresses its work, this section will be used to identify the architecture that has reached rough consensus within the group.
-      </p>
-      <p>
-          The group have been working on various use cases of the Cloud Browser mechanism, and this "Cloud Browser Architecture Note" was originally a part of that discussion.  Note that the group have been working on the survey of exisiting similar mechanisms, and the group's basic plan is publishing the following three topics as three separate IG Notes first and then merge them into one consolidated Note later:
-      </p>
-      <ol>
-      <li>Basic architecture (this "Cloud Browser Architcture" IG Note)</li>
-      <li><a href="https://www.w3.org/2011/webtv/wiki/Main_Page/Cloud_Browser_TF/cloud_browser_vs_split_browser">Survey of the prior work (similarity/difference)</a></li>
-      <li><a href="https://www.w3.org/2011/webtv/wiki/Main_Page/Cloud_Browser_TF/UseCases">Use cases and requirements</a></li>
-      </ol>
-
-      <p>
-          It would take some more time to finalize the <a href="https://www.w3.org/2011/webtv/wiki/Main_Page/Cloud_Browser_TF/cloud_browser_vs_split_browser">survey of the prior work</a> and the <a href="https://www.w3.org/2011/webtv/wiki/Main_Page/Cloud_Browser_TF/UseCases">Use cases and requirements</a>.
-      However, the group would like to start to get wider review and comments from the public for the basic architectural mechanism first.
-    </section>
-    
-    <section class="introductory">
-      <h2>Introduction</h2>
-      <p>
-          Some of the powerful features of Web technologies require browsers for a vast amount of hardware resources to process modern web sites, so sometimes it might be difficult for small less powerful devices to support all the powerful features of various Web technologies including HTML5.
-
-The Cloud Browser concept addresses these issues by putting the browser into a more powerful, easier and manageable server or Cloud. The service execution is shifted to the Cloud, where the user interface is rendered and streamed down as a media stream to the client. The main functionality of the client is decoding and presenting the media stream to the end user. Using this design, it is possible to provide a uniform user interface for a large range of devices. Furthermore, this concept reduces the need for processing power of the client and helps in deploying new browser technologies faster.
+          This is an Interest Group Note from the Cloud Browser Task Force. The Cloud Browser Task Force is part of the Media and Entertainment Interest Group. It has no official standing of any kind and does not represent the support or consensus of any standard organisations or contributor.
       </p>
     </section>
-    
-    <section>
-      <h2>Terminology</h2>
-      <dt>Cloud Browser Client</dt>
-      <dd>Program which communicates with the orchestration.</dd>
-      <dt>Client Device</dt>
-      <dd>Actual hardware which is running the cloud browser client.</dd>
-      <dt>Cloud Browser</dt>
-      <dd>User agent terminated in the orchestration.</dd>
-      <dt>Orchestration</dt>
-      <dd>Server which abstracts functionality and manages sessions for the cloud browser.</dd>
-      <dt>Media Server</dt>
-      <dd>A generalised term for an infrastructure which provide various media streams such as VoD, linear broadcast and even a local pvr.</dd>
-      <dt>Graphics Library</dt>
-      <dd>A library responsible for rendering graphics to the end-user.</dd>
-      <dt>Out-of-band media</dt>
-      <dd>Media that is delivered to the Cloud Browser Client from Media Server directly.</dd>
-      <dt>Web Application</dt>
-      <dd>A software program running in a web browser.</dd>
-      <dt>Cloud Browser Server</dt>
-      <dd>The server where the Cloud Browser is hosted and executed.</dd>
-      <dt>Transformation Proxy</dt>
-      <dd>Transformation proxies alter requests sent by user agents to servers and responses returned by servers so that the appearance, structure or control flow of Web applications are modified.</dd>
-    </section>
-
-    <section class="informative">
-      <h2>Architecture</h2>
-      <p>
-          The following section provides an overview of the main building blocks of the Cloud Browser solution. The goal is to have a consistent architecture between Cloud Browser vendors that doesn't limit the inovation of specific implementations.
-      </p>
       <section>
-        <h4>Client Device</h4>
+        <h2>Introduction</h2>
         <p>
-            A Client Device is the actual hardware where the User Interface is presented. There are no requirements to the Client Device other than that it should have a Cloud Browser Client. A Client Device could be anything from a Set-Top-Box to a SmartTV or even a mobile phone</p>
+           The web becomes feature-rich. Media capturing, web workers, and many other features ensure an engaging experience. Increasing features impacts hardware resources usage. Not all features work on a resource-constrained device. An application will use features depending on the device capabilities. Managing all those device differences is complex. This is especially true for devices used in the media and entertainment industry. Devices in this industry have a longevity and are resource-constrained. A typical example is a set-top-box which has a lifespan of 8 years. Furthermore, updating those devices are discouraged because of the risk a device will fail. Consequently, it is limited in web features. Compared with a desktop computer or mobile phone the web experience is very different.
+        </p>
+        <p>
+          Content providers would like to provide the same experience to all devices. There are numerous reasons such as: they would not have to discriminate their uses based on the device; branding and communications are only needed for one experience; implementation and design are easier without having to deal with a variety of experiences. However, providing the same experience to a variety of devices is difficult. 
+        </p>
+        <p>
+          The industry is shifting to another approach. Leading content providers will not use a general purpose web browser anymore; instead, they will use a constrained, customised, web browser. Some will constrain to a subset of the web specifications. Some will constrain to their own proprietary language. Others will constrain to a (native) javascript framework. Their approach assures (near) the same experience on each device. 
+        </p>
+        
+        <p>
+          Several web browser on a single device is not desirable. The device will only be able to handle a few. Each web browser will add burden to the hardware resources. This limits the set of possible applications on a device. Furthermore, the end user will lose the coherent experience from a general purpose web browser. Moving to different web browsers will slightly change the experience. It may use other page transitions or use other key shortcuts. Likewise, each web browser needs to be configured independently. For example enabling an accessibility feature needs to be done per web browser. Also, web developers will find it harder to develop for multiple browsers with their own constrains such-as javascript only. The authoring complexity will be moved from device diversity to language diversity.
+        </p>
+        
+        <p>
+          Cloud Browser addresses these issues by putting the browser into a powerful server, or cloud. The execution is shifted to the cloud, where the user interface is rendered and send to the Client Device. The main purpose of the client device is presenting the user interface to the end user. This solution makes it possible to provide a uniform experience for a large range of devices. Furthermore, it reduces the need for resource intensive processing on the client device and helps to deploy new browser technologies faster.
+        </p>
+        
+        <p>
+          Providing the web technology to a non-internet infrastructure is difficult. The Cloud Browser is agnostic to infrastructures. The Cloud Browser is terminated in the cloud and is able to use any infrastructure to the client. A typical example is a broadcast infrastructure where the client is not able to connect to a web server.
+        </p>
+        
+        <p>
+          A great number of users experiencing the Cloud Browser Technology today. The technology is based on the foundation of the World Wide Web. However, there are differences with the World Wide Web traditional (client-server) model. This causes incompatibilities. The Cloud Browser Task Force will explorer this—as a joined effort between a variety of stakeholders. The task force provides requirements, use cases and a formalised architecture of a Cloud Browser Technology. This group note is the result and will be used for further standardisation on the Cloud Browser Technology.
+        <p>
+      </section>     
+      <section>    
+        <h3>Cloud Browser compared to a local browser</h3>
+        <p>
+          Most people are familiar with local browsers. A content server serves resources such as HTML, Javascript, and media. The local browser requests the resources and makes the User Interface perceivable for the end-user. The local browser operates in the operating system. Starting and stopping the browser is the responsibility of the operating system. In addition, it provides hardware functionality such as keyboard inputs. A Cloud Browser differ in various aspects:
+        </p>
+        <ul>
+          <li>An operating system or desktop environment is not interacting with the web browser.</li>
+          <li>The server executes the browser but displaying the user interface is on the client device.</li>
+          <li>Resources such as memory or CPU are not used on the Client Device.</li>
+          <li>The Cloud Browser is not directly connected to the Client Device hardware.</li>
+        </ul>
+      </section>
+      <section>    
+        <h3>Cloud Browser compared with a split browser</h3>
+        <p>
+          A split browser, or transformation proxy, transform the content to the most appropriate format for the client device. The Cloud Browser is comparable but different. 
+        </p>
+        <ul>
+          <li>Split browsers provide the best possible representation but are limited by the client capabilities. The split browser could optimise the content but the client needs to process the content. A Cloud Browser terminates everything on the server. Therefore, circumvent the problem of client capability constraints.</li>
+          <li>The Cloud Browser exists in the cloud. The initiator or client device is triggering events but is not responsible for the resources nor the representation.</li>
+          <li>A Split browser <em>"transforms"</em> the content. The Cloud Browser acts as a local browser; therefore, don't alter the content.</li>
+        </ul>
+      </section>
+      <section>    
+        <h3>Cloud Browser compared with a thin/fat paradigm</h3>
+        <p>
+          In a thin/fat paradigm, all processing is done on the server and the user interface is provided to a thin- or zero-client. Cloud Browser is very comparable but has three key differences: 
+        </p>
+        <ul>
+          <li>In a thin/fat paradigm, there are dependencies on an underlying operating system. The Cloud Browser only provides the web browser without dependencies.</li>
+          <li>The Cloud Browser may complement a device, virtually. There is a strict separation between device and server in a thin/fat paradigm. In a Cloud Browser solution, the conceptual model for a device is different. A device is a hybrid of functionality between the apparatus and the orchestration.</li>
+          <li>The Cloud Browser leverage client capabilities where applicable.</li>
+        </ul>
       </section>
       <section>
-        <h4>Cloud Browser Client</h4>
-        <p>
-            In a Cloud Browser architecture the execution is done on a server and the result is sent down to a so-called Cloud Browser Client. This Cloud Browser Client is only responsible for displaying the stream and providing essential information such as key strokes. The latter is depending on the infrastructure. In the future there may be a specification how to exchange this information for example with json-dl based on a generic communication mechanisms such as websockets or webRTC. It will be transport and format agnostic. In other words, it will be vendor specific or may be standardised outside W3C. Furthermore, the Cloud Browser Client doesn't have any context. Namely, it will connect to the orchestration and display the result. This will make sure that all the logic is within the cloud and no necessary updates are needed on the client device. This is also a fundamental difference with a Transformation Proxy, where the context still exists on the client device. An easy way to visualise the Cloud Browser Client is to see it as a remote display which also acts as gateway to send essential information to the Cloud Browser.</p>
-      </section>  
+        <h2>Terminology</h2>
+        <dt>Cloud Browser Client</dt>
+        <dd>Program which communicates with the orchestration.</dd>
+        <dt>Client Device</dt>
+        <dd>Actual hardware which is running the cloud browser client.</dd>
+        <dt>Cloud Browser</dt>
+        <dd>Web browser terminated in the Orchestration.</dd>
+        <dt>Orchestration</dt>
+        <dd>Server which abstracts functionality and manages sessions for the cloud browser.</dd>
+        <dt>Media Server</dt>
+        <dd>A generalised term for an infrastructure which provide various media streams such as VoD, linear broadcast and even a local pvr.</dd>
+        <dt>Graphics Library</dt>
+        <dd>A library responsible for rendering graphics to the end-user.</dd>
+        <dt>Out-of-band media</dt>
+        <dd>The Media server deliver its media to the Cloud Browser Client directly—without going through the Orchestration.</dd>
+        <dt>Web Application</dt>
+        <dd>A software program running in a web browser.</dd>
+        <dt>Cloud Browser Server</dt>
+        <dd>The host for the Orchestration is called the Cloud Browser Server</dd>
+        <dt>Transformation Proxy</dt>
+        <dd>Transformation proxies alter requests sent by web browser to servers and responses returned by servers so that the appearance, structure or control flow of Web applications are modified.</dd>
+        <dt>User Interface</dt>
+        <dd>The User Interface represents the part where the end-user could interact. Typically this is the Graphical user interface on a Client Device display—but could have any other form as-well.</dd>  
+      </section>
       <section>
-        <h4>Cloud Browser</h4>
+        <h2>Architecture</h2>
         <p>
-         The Cloud Browser itself is a user agent terminated in the orchestration and will act as any other conventional browser.
+            The following section provides the Cloud Browser Architecture. The goal is a consistent architecture between Cloud Browser vendors.
         </p>
-      </section>  
+        <section>
+          <h4>Client Device</h4>
+          <p>
+              A Client Device is an apparatus which presenting—or delegating—the User Interface. To be operable a connected to a network is required. A Client Device can be A Set-Top-Box. A Client Device can be a mobile phone. A Client Device can even be a smart watch. Provided, a Cloud Browser Client is available.
+          </p>
+        </section>
+        <section>
+          <h4>Cloud Browser Client</h4>
+          <p>
+              In a Cloud Browser solution, the execution is done in the cloud; the result is sent to the Cloud Browser Client. This Cloud Browser Client is only responsible for showing the user interface and providing essential information such as keystrokes. The latter is depending on the infrastructure. 
+          </p>
+          <p>
+            The Cloud Browser Client does not have any context. It connects to the Orchestration and shows the user interface. This will make sure that all the logic is in the cloud. This avoids otherwise required updates on the Client Device. A way to visualise the Cloud Browser Client is a remote display which sends essential information to the Cloud Browser Orchestration.
+          </p>
+          <p>
+            The transport and format between the Cloud Browser Client and Orchestration is agnostic— vendor specific.
+          </p>
+        </section>  
+        <section>
+          <h4>Cloud Browser</h4>
+          <p>
+           The Cloud Browser denoted in the architecture is a web browser instance, terminated in the orchestration. It acts as a local web browser. Consequently, re-authoring for a Cloud Browser Solution is not necessary for existing applications.
+          </p>
+        </section>  
+        <section>
+          <h4>Orchestration</h4>
+          <p>
+            The Cloud Browser exists in an orchestration.  It is responsible for session management and abstraction. Multiple Cloud Browsers Clients could connect to the orchestration. The orchestration makes sure a client connects to the right Cloud Browser instance. Furthermore, it abstracts differences with a local browser. For example, a Client Device may have constraints on codec capabilities. Then the orchestration could either, provide this to a W3C standardized API, or virtually enhance this constraint by transcoding to a supported codec. Either way, the Cloud Browser is unaware of the decisions. This typical example ensures that the Client Device could run any Web Application, regardless of the codec it mandates. Details on abstraction are out of scope for this document and up to the implementor.
+          </p>
+          <p>
+            The orchestration receives triggers from the Cloud Browser Client such as keystrokes originated from the remote control. Triggers are not restricted to input. It could be any information from the Client Device. The Orchestration interprets the triggers and may decide to delegate it to the Cloud Browser. Depending on the context a red button could mean a regular key press in the Cloud Browser or open a new Web Application. 
+          </p>
+          <p>
+            How the User Interface is sent to the Cloud Browser Client is decided by the Orchestration. There are two main approaches, a Single Stream and a Double Stream approach. The stream format is agnostic to the architecture because this encourages innovation.
+          </p>
+        </section>
+      </section>      
       <section>
-        <h4>Orchestration</h4>
+        <h5 id="single-stream">Single Stream</h5>  
         <p>
-          The Cloud Browser lives in a so-called orchestration that is mainly responsible for session management and abstraction. It is also responsible for how the stream will be sent to the Cloud Browser Client as this is depending on the underlaying infrastructure. There are two main approaches, a Single Stream and a Double Stream approach that are described below.
+            In the Single Stream approach, the orchestration provides both, the user interface and the media streams.
+        </p>
+        <figure>
+          <img src="https://www.w3.org/2011/webtv/wiki/images/0/0c/Ss-cp-highlevel.png" alt="" />
+          <figcaption>Architecture single stream</figcaption>
+        </figure>
+        <p>
+          This approach executes the Web Application in the Cloud Browser and delivers the user interface to the Cloud Browser Client. A typical use case: the user starts the Client Device. The Cloud Browser Client triggers a signal. The signal is received and resolved in the orchestration. It delegates further processing to the Cloud Browser. The Cloud Browser request, download, and parse the resources. These resources include HTML, CSS, and JavaScript. JavaScript is processed and executed. User Interface painting commands are sent to the Graphic Library.
+        </p>
+        <p>
+          In case the Web Application requests a media stream from a Media Server. The Graphic Library will combine the media stream together with the User Interface. The Orchestration sent a single media stream to the Cloud Browser Client; encoded by a Client Device supported codec. The Cloud Browser Client decode and present the stream to the Client Device display.
         </p>
       </section>
-    </section>      
-    
+       <section>  
+        <h5 id="double-stream">Double Stream</h5>  
+        <p>
+            With a Double Stream approach, the Cloud Browser renders the user interface only, while the media is delivered from another source. The User Interface and media streams are delivered separately to the Client Device, which then has to combine both of these streams. The Cloud Browser Client present them to the end-user in a unified form. This approach leverages the video delivery infrastructures. A typical example of a delivery infrastructure is broadcast networks. Here the media is sent to all receivers at ones. Rerouting the traffic is not desired.</p>
+        <figure>
+          <img src="https://www.w3.org/2011/webtv/wiki/images/e/e3/Ds-lp-highlevel.png" alt="" />
+          <figcaption>Architecture Double Stream</figcaption>
+        </figure>
+        <p>
+          This approach executes the Web Application and delivers the User Interface to the Cloud Browser Client as the single stream approach. A media stream is delivered Out Of Band from another source. Blending is done on the Cloud Browser Client. The user interface is usually provided as a sequence of images which a Client Device could process within its own Graphic Library.
+        </p>
+      </section>
+      <section>
+        <h2>Use Cases</h2>
+        <p>
+           Cloud Browser Use Cases are split into two categories. Communication and execution.
+        </p>
+      </section>
+      
+      
+       <!-- template use cases
+        
+        <section>
+          <h4></h4>
+          <p>
+  
+          </p>
+          <ol>
+            <li></li>
+          </ol>
+          <section>    
+            <h5>Notes</h5>
+            <p>
+             
+            </p>
+          </section>
+          <section>    
+            <h5>Requirements</h5>
+            <p>
+            
+            </p>
+          </section>
+        </section>
+        
+        -->
+      
+      
+      <section>
+        <h3>Communication uses cases</h3>
+        <p>
+          Enabling a Cloud Browser solution will need communication between a Cloud Browser Client and the Orchestration. Outcomes from these use cases will lead to new standards.
+        </p>
+        <section>
+          <h4>Cloud Browser Client establishes a control channel with the Cloud Browser</h4>
+          <p>
+            The control channel is used to communicate the state of the Cloud Browser Client to the Cloud Browser, receive requests from the Cloud   Browser.
+          </p>
+          <ol>
+            <li>Cloud Browser Client connects to the Orchestration.</li>
+            <li>Cloud Browser Client authenticates itself to the Cloud Orchestration.</li>
+            <li>If the authentication is successful, the Orchestration connects the Cloud Browser with the client through the control channel.</li  >
+          </ol>
+          <section>    
+            <h5>Requirements</h5>
+            <ul>
+              <li>The control channel must be reliable; so, that no state change or instruction gets lost.</li>
+              <li>Both the Cloud Browser and the Cloud Browser Client communicate through this channel.</li>
+              <li>Cloud environment needs a way to authenticate the client.</li>
+            </ul>
+          </section>
+        </section>  
+        <section>
+          <h4>Cloud Browser sends request through control channel to the Cloud Browser Client</h4>
+          <p>
+            The application running within the Cloud Browser issues an API call, this API call depends upon the partial or whole execution in the   Cloud Browser Client.
+          </p>
+          <ol>
+            <li>Application issues API call.</li>
+            <li>Cloud Browser begins executing the API call.</li>
+            <li>If a part or the whole call depends on the client side execution, then send a request to the device client.</li>
+            <li>Client processes the request and sends the result back to the Cloud Browser (if necessary).</li>
+            <li>Cloud Browser goes on with the execution of the API call.</li>
+          </ol>
+          <section>    
+            <h5>Notes</h5>
+            <p>
+              If the API call is synchronous then the request has to be synchronous too.
+            </p>
+            <p>
+              List of possible requests:        
+              <ul>
+                <li>Set the volume.</li>
+                <li>Load an URL for playback (for Double Stream Approach with a local player).</li>
+                <li>Play, pause, stop, seek current playing media.</li>
+                <li>Control client local tuner.</li>
+              </ul>
+            </p>
+          </section>
+          <section>    
+            <h5>Requirements</h5>
+            <ul>
+              <li>There must be a control channel.</li>
+              <li>All communication must be validated, to make sure that no malicious data has been inserted.</li>
+            </ul>
+          </section>
+        </section>
+        <section>
+          <h4>Cloud Browser Client creates a session with the Orchestration</h4>
+          <p>
+            For each session there will be one User Interface and one or more control channels. Also the Orchistration can store resources associated to the session.
+          </p>
+          <ol>
+            <li>The Cloud Browser Client connects to the Orchistration</li>
+            <li>The Cloud Browser Client authenticates</li>
+            <li>After a successful authentication the Orchistration responds with a session id</li>
+          </ol>
+          <section>    
+            <h5>Notes</h5>
+            <p>
+               A possible implementations would be a kind of RPC. A possible representation for session ids would be UUID (http://www.ietf.org/rfc/rfc4122.txt). It is recommended to use a secure communication protocol (HTTPS, TLS).
+            </p>
+          </section>
+          <section>    
+            <h5>Requirements</h5>
+            <p>
+              The session id must be unique.
+            </p>
+          </section>
+        </section>
+        <section>
+          <h4>Cloud Browser Client closes the session</h4>
+          <p>
+            The Cloud Browser Client wants to close the session.
+          </p>
+          <ol>
+            <li>Cloud browser client requests the orchistration to close the session with the specified session id</li>
+          </ol>
+          <section>    
+            <h5>Requirements</h5>
+            <p>
+              There must be a way to close the session. It may be required to close the session from the orchestration. 
+            </p>
+          </section>
+        </section>
+        <section>
+          <h4>Cloud Browser Client starts streaming the User Interface</h4>
+          <p>
+            The Cloud Browser Client begins the streaming of the User Interface associated with a session id.
+          </p>
+          <ol>
+            <li>Cloud Browser client sent a red key</li>
+            <li>Orchistration uses this as trigger to start an Web Application</li>
+            <li>Web application is executed in the Cloud Browser</li>
+            <li>Orchistration sent user interface to the Cloud Browser Client</li>
+          </ol>
+          <section>    
+            <h5>Requirements</h5>
+            <p>
+              The User Interface stream must be as low latency as possible.
+            </p>
+          </section>
+        </section>
+      </section>  
+      <section>
+        <h3>Execution Use Cases</h3>
+        <p>
+          Execution Use Cases describe the challenges that the Cloud Browser encounter. Some use cases will work on a local browser but are problematic on a Cloud Browser. These use cases will be used to extend or modify existing standards.
+        </p>
+        <section>
+          <h4>User interface is downscaled on the client device.</h4>
+          <p>As a Web Application, I would like to know how the User Interface is perceived by the end-user.</p>
+          <ol>
+            <li>The cloud browser renders the User Interface on 1920x1080 resolution.</li>
+            <li>The client is only capable of displaying 1280x720.</li>
+            <li>Cloud Browser downscale the User Interface to 1280x720.
+          </ol>
+          <p>
+            Typical example: the user interface is specifically authored for a higher resolution. The screen properties provide the same   resolution but the scale is changed.
+          </p>
+          <section>    
+            <h5>Notes</h5>
+            <p>
+              A workable solution is to look at the devicePixelRatio on the window object (window.devicePixelRatio). However, this is not how the     property is used today. 
+            </p>
+          </section>  
+          <section>  
+            <h5>Requirements</h5>
+            <p>
+              There should be means to see how the end user perceives the User Interface.
+            </p>
+          </section>
+        </section>  
+        <section>    
+          <h4>Application needs to know when the User Interface is visible</h4>
+          <p>
+            As an application, I would like to know when the User Interface is perceived by the end-user
+          </p>
+          <ol>
+            <li>The cloud browser renders the User Interface.</li>
+            <li>DOM loaded event is fired.</li>
+            <li>The client receives the User Interface and renders it to the end user.</li>
+          </ol>
+          <section>
+            <h5>Notes</h5>
+            <p>
+              Since the UI is terminated in the cloud, it is hard to tell when the user actually sees it. On a local browser this instantaneously     after a load event. However, on a cloud solution, the UI needs to be sent to the Client Device. Depending on the network     infrastructure (broadband, managed IP) it could take up a significant amount of time. Therefore, you need to use the rendered   event   which reflects the time the user perceives the UI.
+            </p>
+          </section>
+          <section>  
+            <h5>Requirement</h5>
+            <p>
+              There should be means to see when the end user perceives the User Interface. A solution could be to have an additional event to   notify   when the User Interface is rendered on the screen
+            </p>
+          </section>
+        </section>  
+        <section>    
+          <h4>Application needs to virtual media capabilities</h4>
+          <p>
+            As a Web Application, I would like to know which media capabilities are virtual and which are native
+          </p>
+          <ol>
+            <li>The cloud browser request media capabilities.</li>
+            <li>Cloud Browser provides both virtual as-well as native capabilities.</li>
+            <li>As a content provider, you would like to serve the best possible content the users could perceive on their device.</li>
+          </ol>
+          <section>    
+            <h5>Notes</h5>
+            <p>
+              The canPlayType property may be used to detect the supported types. However, on a cloud browser solution, you would also like to   know which types are played natively on the client device and which are transcoded. Apart from additional processing cost on the   server, it would make more sense to play a media asset natively and leverage the device capabilities when possible.
+            </p>
+          </section>
+          <section>    
+            <h5>Requirements</h5>
+            <p>
+              There should be a way to identify virtual and native media capabilities. A solution could be to look at the the "virtually" type   with   the canPlayType. Here is an example how it will look:
+                <pre><code>
+                  var support = videoElement.canPlayType('type=\'video/mp4; codecs="avc1.42E01E, mp4a.40.2"\); 
+                  if (support == "probably") console.log("natively supported") 
+                  else if (support == "virtually") console.log("supported by transcoding")
+                </code></pre>
+            </p>
+          </section>
+        </section>  
+        <section>
+          <h4>Application needs to know how to identify</h4>
+          <p>
+            As a Web Application, I would like to know how to interpreted identification      
+          </p>
+          <ol>
+            <li>The Cloud Browser request geolocation.</li>
+            <li>Cloud Browser provides location of the orchestration.</li>
+          </ol>
+          <section>        
+            <h5>Notes</h5>
+            <p>
+              Sometimes it could be confusing what part is identified. For example, the geolocation API could be used to identify from which     location the user is interacting. Based on this information different content could be served. However, it should be clear that   the   locations are based on the user location and not the cloud browser. This will also provide incorrect inside into analytic   services.   Usually, the services are using the IP address as the reference which may not work with a Cloud Browser.
+            </p>
+          </section>
+          <section>    
+            <h5>Requirement</h5>
+            <p>
+              There should be a convention how to interpreted identification APIs. Where possible a Cloud Browser solution could provide an x    -forwarded-for HTTP header. The client type information could be obtained by the user agent string together with the Orchestration     information.
+            </p>
+          </section>
+        </section>  
+        <section>  
+          <h4>Application needs to have additional error handling</h4>
+          <p>
+            As a Web Application, I would like to know how to provide Cloud Browser specific errors
+          </p>
+          <ol>
+            <li>The client generates a decode error</li>
+            <li>Cloud Browser provides error to the application</li>
+          </ol>  
+          <section>    
+            <h5>Notes</h5>
+            <p>
+              In a Cloud Browser, you may need additional error reporting. For example when something goes wrong between the Cloud Browser and     Client Device you need to have feedback what went wrong.
+            </p>
+          </section>
+          <section>    
+            <h5>Requirements</h5>
+            <p>
+              There needs to be a way to provide Cloud Browser specific errors. A proper error message may be reported in the global window object     using the error event.
+            </p>  
+          </section>
+        </section>
+      </section>  
     <section>
-      <h5 id="single-stream">Single Stream</h5>  
-      <p>
-          In the Single Stream approach, the orchestration provides both the user interface and the media streams. The Cloud Browser Client does not process any other media data from other media sources. The only data the orchestration receives are triggers such as key strokes originated from the remote control of the Client Device. However, it is important to mention that the triggers are not restricted to input. it could be any data that is sent by any Client Device (e.g. capabilities).
-      </p>
-      <figure>
-        <img src="https://www.w3.org/2011/webtv/wiki/images/0/0c/Ss-cp-highlevel.png" alt="">
-        <figcaption>Architecture single stream</figcaption>
-      </figure>
-      <p>
-        The approach executes the Web Application in the Cloud Browser and delivers the user interface to the Cloud Browser Client. A typical use case: The user starts the Client Device which triggers a signal via the Cloud Browser Client which starts a Web Application. The Cloud Browser requests the Web Application. After the resources of the Web Application are downloaded, they are parsed and interpreted by the Cloud Browser. These resources include HTML, CSS and JavaScript. The JavaScript is processed and executed by the JavaScript engine of the Cloud Browser. After the layout is done, the painting commands of the User Interface are sent to the Graphics Library. The Graphics Library is part of the Orchestration and resides on the Cloud Browser Server.
-      </p>
-      <p>        
-        In case the Web Application requests a media stream from a Media Server. The Graphics Library will blend the media stream togheter with the User Interface. The output is encoded using the required video codec supported by the Client Device and sent as a single media stream to the Cloud Browser Client via the Orchestration. The Cloud Browser Client receives the media stream. The stream is decoded and presented to the display of the Client Device.
-      </p>
-    </section>
- 
-    <section>  
-      <h5 id="double-stream">Double Stream</h5>  
-      <p>
-          With regards to the Double Stream approach of a Cloud Browser, the Cloud Browser renders the User Interface only, while the media is delivered from an Media Server. Thus, the User Interface and media streams are delivered separately to the Client Device, which then has to combine both of these streams and present them to the end-user in a unified form. This approach therefore leverages the video delivery infrastructures such as multicast networks.</p>
-      <figure>
-        <img src="https://www.w3.org/2011/webtv/wiki/images/e/e3/Ds-lp-highlevel.png" alt="">
-        <figcaption>Architecture double stream</figcaption>
-      </figure>
-    </section>
-    <section>
-      <p>
-        This approach executes the Web Application and delivers the data to the Cloud Browser Client as the single stream approach does. However a media stream is not blended with the user interface but delivered Out Of Band from a Media Server. Blending is done on the Cloud Browser Client. Therefore the user interface is usually provided as a sequence of images which a Client Device could process within its own Graphic Library.</p>
-    </section>
-     <section>
-      <h3>Acknowledgments</h3>
+      <h2>Acknowledgments</h2>
       <p>
         Special thanks to Oliver Friedrich, Nilo Mitra, Kaz Ashimura and Steve Morris for there contributions to this document.
       </p>
